@@ -1,0 +1,10 @@
+version: '3'
+services:
+  springboot-docker-compose-app-container:
+    container_name: java-test
+    image: vyasg84/springboot:latest
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
