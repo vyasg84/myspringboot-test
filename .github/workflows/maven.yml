@@ -17,6 +17,7 @@ jobs:
    
   publish: 
    name: push docker images to docker hub
+   needs: build
    runs-on: ubuntu-latest
    steps:
       - uses: actions/checkout@v2
