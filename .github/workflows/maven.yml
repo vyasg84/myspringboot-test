@@ -13,18 +13,19 @@ jobs:
    - name: checkout step
      uses: actions/checkout@v3
    - name: Build Docker Image 
-     run:  docker build -f Dockerfile -t vyasg84/springboot:$(date +%s)  .
-   
+     run:  docker build -f Dockerfile -t vyasg84/springboot:latest  .
+    
   publish: 
    name: push docker images to docker hub
    needs: build
    runs-on: ubuntu-latest
+   
    steps:
-      - uses: actions/checkout@v2
-      - name: docker login
-        env:
-          DOCKER_USER: '${{ secrets.DOCKER_USER }}'
-          DOCKER_PASSWORD: '${{ secrets.DOCKER_PASSWORD }}'
-        run: |
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD --password-stdin
-          docker push vyasg84/springboot
+    - uses: actions/checkout@v3
+    - name: docker login
+      env:
+        DOCKER_USER: '${{ secrets.DOCKER_USER }}'
+        DOCKER_PASSWORD: '${{ secrets.DOCKER_PASSWORD }}'
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+        docker push vyasg84/springboot:latest
