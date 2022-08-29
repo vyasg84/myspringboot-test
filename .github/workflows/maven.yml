@@ -34,8 +34,15 @@ jobs:
    - name: executing remote ssh commands using password
      uses: appleboy/ssh-action@master
      with:
-      host: ${{ secrets.HOST }}
+      host: ${{ secrets.SSH_HOST }}
       username: ${{ secrets.USERNAME }}
       password: ${{ secrets.PASSWORD }}
       port: ${{ secrets.PORT }}
-      script: whoami
+      script: |
+        whoami
+        docker image rmi -f vyasg84/springboot:latest &&
+        rm -rf springboot-test &&
+        git clone https://vyasgaurav@bitbucket.org/vyasgaurav/springboot-test.git &&
+        cd springboot-test &&
+        docker-compose down &&
+        docker-compose up -d
