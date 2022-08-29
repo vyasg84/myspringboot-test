@@ -1,28 +1,29 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+name: Java CI with Maven	
 
-name: Java CI with Maven
-
-on:
-  push:
+on:	
+  push:	
+    branches: [ "main" ]	
+  pull_request:	
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
 jobs:
-  build:
-
-    runs-on: ubuntu:latest
-
-    steps:
+  build: 
+   name: build docker images
+   runs-on: ubuntu-latest
+   steps:
+   - uses: actions/checkout@v3
+   - name: Build & push on Docker
+   - run:  docker build . --file Dockerfile --tag vyasg84/springboot:$(date +%s)  .
+   
+  publish: 
+   name: push docker images to docker hub
+   runs-on: ubuntu-latest
+   steps:
     - uses: actions/checkout@v3
-    - name: Build & push on Docker
-    - run: |
-        echo Login to DockerHub Account
-        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        # username: ${{ secrets.DOCKER_USERNAME }}
-        #password: ${{ secrets.DOCKER_PASSWORD }}
-        echo1. Build DockerImage
-        docker build -t vyasg84/springboot:latest .
-        echo1.  Push DockerImage to DockerHub
-        docker push vyasg84/springboot:latest
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v4
+      with:
+        name: vyasg84/springboot
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        dockerfile: Dockerfile
+    
